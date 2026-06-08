@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Unit Converter — Length, Weight & Temperature | QuickTools</title>
+<meta name="description" content="Free unit converter for length, weight, and temperature. Convert meters, feet, miles, kg, pounds, Celsius, Fahrenheit and more instantly. No sign-up.">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header class="site"><div class="container">
+  <a class="brand" href="../index.html">Quick<span>Tools</span></a>
+  <nav class="top"><a href="../index.html">All tools</a></nav>
+</div></header>
+
+<main class="container">
+  <div class="tool">
+    <h1>Unit Converter</h1>
+    <p class="lede">Convert length, weight, and temperature instantly.</p>
+
+    <label for="cat">Category</label>
+    <select id="cat">
+      <option value="length">Length</option>
+      <option value="weight">Weight / Mass</option>
+      <option value="temp">Temperature</option>
+    </select>
+
+    <div class="row">
+      <div><label for="val">Value</label><input type="number" id="val" step="any" value="1" inputmode="decimal"></div>
+      <div><label for="from">From</label><select id="from"></select></div>
+      <div><label for="to">To</label><select id="to"></select></div>
+    </div>
+
+    <div class="result" id="out"><span class="big" id="answer">—</span><span class="muted" id="explain"></span></div>
+    <a class="back" href="../index.html">← Back to all tools</a>
+  </div>
+
+  <div class="ad-slot">Ad space — replace with your ad network code after approval</div>
+
+  <section class="seo">
+    <h2>How unit conversion works</h2>
+    <p>Length and weight conversions work by expressing every unit relative to a base unit (meters for length, grams for weight), then scaling. Temperature is different — Celsius, Fahrenheit, and Kelvin use offset formulas rather than simple ratios. This tool handles all three correctly and updates as you type.</p>
+    <h2>Common conversions</h2>
+    <p>1 mile = 1.609 km, 1 foot = 0.3048 m, 1 kg = 2.205 lb, 1 ounce = 28.35 g. For temperature, °F = °C × 9/5 + 32, and Kelvin = °C + 273.15.</p>
+  </section>
+</main>
+
+<footer class="site"><div class="container"><div>© <span id="yr"></span> QuickTools</div><div><a href="../index.html">More free tools →</a></div></div></footer>
+
+<script>
+const UNITS = {
+  length: { base: 'm', units: { 'Millimeters (mm)':0.001,'Centimeters (cm)':0.01,'Meters (m)':1,'Kilometers (km)':1000,'Inches (in)':0.0254,'Feet (ft)':0.3048,'Yards (yd)':0.9144,'Miles (mi)':1609.344 } },
+  weight: { base: 'g', units: { 'Milligrams (mg)':0.001,'Grams (g)':1,'Kilograms (kg)':1000,'Tonnes (t)':1e6,'Ounces (oz)':28.3495,'Pounds (lb)':453.592,'Stone (st)':6350.29 } },
+  temp:   { base: null, units: { 'Celsius (°C)':'C','Fahrenheit (°F)':'F','Kelvin (K)':'K' } }
+};
+const cat = document.getElementById('cat'), from = document.getElementById('from'), to = document.getElementById('to'), val = document.getElementById('val');
+function fillUnits() {
+  const keys = Object.keys(UNITS[cat.value].units);
+  [from, to].forEach((sel, i) => {
+    sel.innerHTML = '';
+    keys.forEach(k => { const o = document.createElement('option'); o.value = k; o.textContent = k; sel.appendChild(o); });
+    sel.selectedIndex = i === 0 ? 0 : Math.min(1, keys.length - 1);
+  });
+  convert();
+}
+function toBase(v, unit) {
+  if (cat.value !== 'temp') return v * UNITS[cat.value].units[unit];
+  const u = UNITS.temp.units[unit];
+  if (u === 'C') return v; if (u === 'F') return (v - 32) * 5/9; return v - 273.15; // to Celsius
+}
+function fromBase(v, unit) {
+  if (cat.value !== 'temp') return v / UNITS[cat.value].units[unit];
+  const u = UNITS.temp.units[unit];
+  if (u === 'C') return v; if (u === 'F') return v * 9/5 + 32; return v + 273.15; // from Celsius
+}
+function round(n) { return Math.round(n * 1e6) / 1e6; }
+function convert() {
+  const v = parseFloat(val.value);
+  const ans = document.getElementById('answer'), exp = document.getElementById('explain');
+  if (isNaN(v)) { ans.textContent = 'Enter a value'; exp.textContent = ''; return; }
+  const result = round(fromBase(toBase(v, from.value), to.value));
+  ans.textContent = result;
+  exp.textContent = `${v} ${from.value} = ${result} ${to.value}`;
+}
+cat.addEventListener('change', fillUnits);
+[from, to, val].forEach(el => el.addEventListener('input', convert));
+fillUnits();
+document.getElementById('yr').textContent = new Date().getFullYear();
+</script>
+</body>
+</html>

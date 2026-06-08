@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Age Calculator — Exact Age in Years, Months & Days | QuickTools</title>
+<meta name="description" content="Free age calculator. Enter your date of birth to find your exact age in years, months, and days, plus total days lived. Fast and private.">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header class="site"><div class="container">
+  <a class="brand" href="../index.html">Quick<span>Tools</span></a>
+  <nav class="top"><a href="../index.html">All tools</a></nav>
+</div></header>
+
+<main class="container">
+  <div class="tool">
+    <h1>Age Calculator</h1>
+    <p class="lede">Find your exact age — down to the day.</p>
+
+    <div class="row">
+      <div><label for="dob">Date of birth</label><input type="date" id="dob"></div>
+      <div><label for="at">Age at date</label><input type="date" id="at"></div>
+    </div>
+
+    <button class="primary" id="go">Calculate age</button>
+
+    <div class="result hidden" id="out">
+      <span class="big" id="main">—</span>
+      <div style="margin-top:12px" id="extra" class="muted"></div>
+    </div>
+    <a class="back" href="../index.html">← Back to all tools</a>
+  </div>
+
+  <div class="ad-slot">Ad space — replace with your ad network code after approval</div>
+
+  <section class="seo">
+    <h2>How age is calculated</h2>
+    <p>Your age is the time elapsed between your date of birth and a target date (today by default). This tool counts complete years first, then the remaining months, then the leftover days — accounting for different month lengths and leap years — so the result matches how age is counted in everyday life.</p>
+    <h2>Uses</h2>
+    <p>Check exact age for forms, eligibility, milestones, or curiosity. Change the "age at date" field to find how old someone was (or will be) on any specific date.</p>
+  </section>
+</main>
+
+<footer class="site"><div class="container"><div>© <span id="yr"></span> QuickTools</div><div><a href="../index.html">More free tools →</a></div></div></footer>
+
+<script>
+function todayStr() {
+  const d = new Date();
+  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+}
+document.getElementById('at').value = todayStr();
+function diff(b, a) {
+  let years = a.getFullYear() - b.getFullYear();
+  let months = a.getMonth() - b.getMonth();
+  let days = a.getDate() - b.getDate();
+  if (days < 0) { months--; const prevMonth = new Date(a.getFullYear(), a.getMonth(), 0).getDate(); days += prevMonth; }
+  if (months < 0) { years--; months += 12; }
+  return { years, months, days };
+}
+function calc() {
+  const dobV = document.getElementById('dob').value, atV = document.getElementById('at').value;
+  const mainEl = document.getElementById('main'), extraEl = document.getElementById('extra');
+  if (!dobV) { mainEl.textContent = 'Enter your date of birth'; extraEl.textContent=''; document.getElementById('out').classList.remove('hidden'); return; }
+  const b = new Date(dobV + 'T00:00:00'), a = new Date((atV || todayStr()) + 'T00:00:00');
+  if (a < b) { mainEl.textContent = 'Target date is before birth date'; extraEl.textContent=''; document.getElementById('out').classList.remove('hidden'); return; }
+  const d = diff(b, a);
+  const totalDays = Math.floor((a - b) / 86400000);
+  const totalWeeks = Math.floor(totalDays / 7);
+  mainEl.textContent = `${d.years} years, ${d.months} months, ${d.days} days`;
+  extraEl.innerHTML = `That's <strong>${totalDays.toLocaleString()}</strong> days · <strong>${totalWeeks.toLocaleString()}</strong> weeks · <strong>${(d.years*12 + d.months).toLocaleString()}</strong> months total`;
+  document.getElementById('out').classList.remove('hidden');
+}
+document.getElementById('go').addEventListener('click', calc);
+document.getElementById('yr').textContent = new Date().getFullYear();
+</script>
+</body>
+</html>

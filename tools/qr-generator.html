@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>QR Code Generator — Free & Instant | QuickTools</title>
+<meta name="description" content="Free QR code generator. Turn any link or text into a downloadable QR code in seconds. Generated in your browser — private, no sign-up, no watermark.">
+<link rel="stylesheet" href="../assets/style.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+</head>
+<body>
+<header class="site"><div class="container">
+  <a class="brand" href="../index.html">Quick<span>Tools</span></a>
+  <nav class="top"><a href="../index.html">All tools</a></nav>
+</div></header>
+
+<main class="container">
+  <div class="tool">
+    <h1>QR Code Generator</h1>
+    <p class="lede">Turn any link or text into a QR code you can download.</p>
+
+    <label for="text">Link or text</label>
+    <input type="text" id="text" placeholder="https://example.com or any text" value="https://tk7247.github.io/quicktools/">
+
+    <div class="row">
+      <div>
+        <label for="size">Size (px)</label>
+        <select id="size"><option>128</option><option selected>256</option><option>384</option><option>512</option></select>
+      </div>
+    </div>
+
+    <button class="primary" id="go">Generate QR code</button>
+
+    <div class="result hidden" id="out" style="text-align:center">
+      <div id="qr" style="display:inline-block; background:#fff; padding:14px; border-radius:10px"></div>
+      <div style="margin-top:14px"><a id="dl" class="primary" style="display:inline-block; width:auto; padding:10px 18px; text-decoration:none" download="qrcode.png">Download PNG</a></div>
+    </div>
+    <a class="back" href="../index.html">← Back to all tools</a>
+  </div>
+
+  <div class="ad-slot">Ad space — replace with your ad network code after approval</div>
+
+  <section class="seo">
+    <h2>What is a QR code?</h2>
+    <p>A QR (Quick Response) code is a square barcode that phones can scan with their camera to open a link, show text, or trigger an action. They're used on menus, posters, business cards, packaging, and event tickets. This generator turns any URL or text into a high-resolution QR code you can download and print.</p>
+    <h2>Private by design</h2>
+    <p>Your QR code is created entirely in your browser — the text you enter is never uploaded to any server. Download the PNG and use it anywhere, with no watermark and no expiry.</p>
+  </section>
+</main>
+
+<footer class="site"><div class="container"><div>© <span id="yr"></span> QuickTools</div><div><a href="../index.html">More free tools →</a></div></div></footer>
+
+<script>
+let qrInstance = null;
+function generate() {
+  const text = document.getElementById('text').value.trim();
+  const size = parseInt(document.getElementById('size').value);
+  const box = document.getElementById('qr');
+  if (!text) { box.innerHTML = '<p style="color:#333;margin:0">Enter a link or text first</p>'; document.getElementById('out').classList.remove('hidden'); return; }
+  box.innerHTML = '';
+  qrInstance = new QRCode(box, { text: text, width: size, height: size, correctLevel: QRCode.CorrectLevel.H });
+  document.getElementById('out').classList.remove('hidden');
+  // Wire the download link once the canvas exists.
+  setTimeout(() => {
+    const canvas = box.querySelector('canvas');
+    const img = box.querySelector('img');
+    const dl = document.getElementById('dl');
+    if (canvas) dl.href = canvas.toDataURL('image/png');
+    else if (img && img.src) dl.href = img.src;
+  }, 60);
+}
+document.getElementById('go').addEventListener('click', generate);
+document.getElementById('text').addEventListener('keyup', e => { if (e.key === 'Enter') generate(); });
+document.getElementById('yr').textContent = new Date().getFullYear();
+generate();
+</script>
+</body>
+</html>
