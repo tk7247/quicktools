@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Text Case Converter — UPPERCASE, lowercase, Title Case | QuickTools</title>
+<meta name="description" content="Free text case converter. Instantly change text to UPPERCASE, lowercase, Title Case, Sentence case, or capitalized. Copy the result with one click.">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header class="site"><div class="container">
+  <a class="brand" href="../index.html">Quick<span>Tools</span></a>
+  <nav class="top"><a href="../index.html">All tools</a></nav>
+</div></header>
+
+<main class="container">
+  <div class="tool">
+    <h1>Text Case Converter</h1>
+    <p class="lede">Change the case of your text and copy it instantly.</p>
+
+    <label for="txt">Your text</label>
+    <textarea id="txt" rows="6" placeholder="Paste or type text here...">The quick brown fox jumps over the lazy dog.</textarea>
+
+    <div class="row" style="margin-top:14px">
+      <button class="primary" data-case="upper" style="margin-top:0">UPPERCASE</button>
+      <button class="primary" data-case="lower" style="margin-top:0">lowercase</button>
+      <button class="primary" data-case="title" style="margin-top:0">Title Case</button>
+      <button class="primary" data-case="sentence" style="margin-top:0">Sentence case</button>
+    </div>
+
+    <button class="primary" id="copy" style="background:var(--bg-elev)">Copy result</button>
+    <a class="back" href="../index.html">← Back to all tools</a>
+  </div>
+
+  <div class="ad-slot">Ad space — replace with your ad network code after approval</div>
+
+  <section class="seo">
+    <h2>When to use each case</h2>
+    <p><strong>UPPERCASE</strong> for emphasis or headings, <strong>lowercase</strong> for usernames and tags, <strong>Title Case</strong> for headlines and titles, and <strong>Sentence case</strong> for normal prose where only the first letter of each sentence is capitalized. This tool converts between them instantly without retyping.</p>
+    <h2>Private and instant</h2>
+    <p>All conversion happens in your browser — your text is never uploaded. Paste freely, convert, and copy the result with one click.</p>
+  </section>
+</main>
+
+<footer class="site"><div class="container"><div>© <span id="yr"></span> QuickTools</div><div><a href="../index.html">More free tools →</a></div></div></footer>
+
+<script>
+const txt = document.getElementById('txt');
+function convert(mode) {
+  let t = txt.value;
+  if (mode === 'upper') t = t.toUpperCase();
+  else if (mode === 'lower') t = t.toLowerCase();
+  else if (mode === 'title') t = t.toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
+  else if (mode === 'sentence') {
+    t = t.toLowerCase().replace(/(^\s*\w|[.!?]\s*\w)/g, c => c.toUpperCase());
+  }
+  txt.value = t;
+}
+document.querySelectorAll('button[data-case]').forEach(b =>
+  b.addEventListener('click', () => convert(b.dataset.case)));
+document.getElementById('copy').addEventListener('click', () => {
+  navigator.clipboard.writeText(txt.value).then(() => {
+    const b = document.getElementById('copy'); b.textContent = 'Copied!'; setTimeout(() => b.textContent = 'Copy result', 1200);
+  });
+});
+document.getElementById('yr').textContent = new Date().getFullYear();
+</script>
+</body>
+</html>

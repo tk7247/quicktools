@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mortgage Calculator — Monthly Payment with Tax & Insurance | QuickTools</title>
+<meta name="description" content="Free mortgage calculator. Enter home price, down payment, rate, and term to see your full monthly payment including property tax and insurance. Plus total interest.">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header class="site"><div class="container">
+  <a class="brand" href="../index.html">Quick<span>Tools</span></a>
+  <nav class="top"><a href="../index.html">All tools</a></nav>
+</div></header>
+
+<main class="container">
+  <div class="tool">
+    <h1>Mortgage Calculator</h1>
+    <p class="lede">Estimate your full monthly payment — principal, interest, tax, and insurance.</p>
+
+    <label for="price">Home price ($)</label>
+    <input type="number" id="price" placeholder="e.g. 350000" min="0" step="any" inputmode="decimal">
+
+    <div class="row">
+      <div><label for="down">Down payment ($)</label><input type="number" id="down" placeholder="e.g. 70000" min="0" step="any" inputmode="decimal"></div>
+      <div><label for="rate">Interest rate (%)</label><input type="number" id="rate" placeholder="e.g. 6.5" min="0" step="any" inputmode="decimal"></div>
+      <div><label for="years">Term (years)</label><input type="number" id="years" value="30" min="1" step="1" inputmode="numeric"></div>
+    </div>
+    <div class="row">
+      <div><label for="tax">Property tax / yr ($)</label><input type="number" id="tax" placeholder="e.g. 3500" min="0" step="any" inputmode="decimal"></div>
+      <div><label for="ins">Home insurance / yr ($)</label><input type="number" id="ins" placeholder="e.g. 1200" min="0" step="any" inputmode="decimal"></div>
+    </div>
+
+    <button class="primary" id="go">Calculate</button>
+
+    <div class="result hidden" id="out">
+      <span class="big" id="monthly">$0.00</span>
+      <span class="muted">total monthly payment</span>
+      <div style="margin-top:12px">
+        Principal &amp; interest: <strong id="pi">$0.00</strong> &nbsp;•&nbsp; Tax + insurance: <strong id="ti">$0.00</strong><br>
+        Loan amount: <strong id="loan">$0.00</strong> &nbsp;•&nbsp; Total interest over term: <strong id="totint">$0.00</strong>
+      </div>
+    </div>
+    <a class="back" href="../index.html">← Back to all tools</a>
+  </div>
+
+  <div class="ad-slot">Ad space — replace with your ad network code after approval</div>
+
+  <section class="seo">
+    <h2>What's in a mortgage payment?</h2>
+    <p>A typical monthly mortgage payment has four parts, often called PITI: Principal, Interest, Taxes, and Insurance. Principal and interest are calculated from your loan amount, rate, and term using the standard amortization formula; property tax and homeowners insurance are usually collected monthly and held in escrow.</p>
+    <h2>Lower your payment</h2>
+    <p>A larger down payment reduces the loan amount and may remove mortgage insurance. A lower rate or shorter term reduces total interest. Use this calculator to compare scenarios before you commit — it's an estimate, not a loan offer.</p>
+  </section>
+</main>
+
+<footer class="site"><div class="container"><div>© <span id="yr"></span> QuickTools</div><div><a href="../index.html">More free tools →</a></div></div></footer>
+
+<script>
+const fmt = n => '$' + (isFinite(n) ? n : 0).toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2});
+function calc() {
+  const price = parseFloat(document.getElementById('price').value) || 0;
+  const down = parseFloat(document.getElementById('down').value) || 0;
+  const annual = parseFloat(document.getElementById('rate').value) || 0;
+  const years = parseFloat(document.getElementById('years').value) || 0;
+  const tax = parseFloat(document.getElementById('tax').value) || 0;
+  const ins = parseFloat(document.getElementById('ins').value) || 0;
+  const P = Math.max(0, price - down);
+  const n = Math.round(years * 12);
+  const r = annual / 100 / 12;
+  let pi;
+  if (n <= 0 || P <= 0) pi = 0;
+  else if (r === 0) pi = P / n;
+  else pi = P * r * Math.pow(1 + r, n) / (Math.pow(1 + r, n) - 1);
+  const ti = (tax + ins) / 12;
+  const totalMonthly = pi + ti;
+  const totalInterest = pi * n - P;
+  document.getElementById('monthly').textContent = fmt(totalMonthly);
+  document.getElementById('pi').textContent = fmt(pi);
+  document.getElementById('ti').textContent = fmt(ti);
+  document.getElementById('loan').textContent = fmt(P);
+  document.getElementById('totint').textContent = fmt(totalInterest > 0 ? totalInterest : 0);
+  document.getElementById('out').classList.remove('hidden');
+}
+document.getElementById('go').addEventListener('click', calc);
+['price','down','rate','years','tax','ins'].forEach(id => document.getElementById(id).addEventListener('keyup', e => { if (e.key==='Enter') calc(); }));
+document.getElementById('yr').textContent = new Date().getFullYear();
+</script>
+</body>
+</html>
