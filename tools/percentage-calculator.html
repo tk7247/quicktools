@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Percentage Calculator — Percent Of, Change & More | QuickTools</title>
+<meta name="description" content="Free percentage calculator. Find what X% of a number is, what percent one number is of another, and percentage increase or decrease. Instant, accurate results.">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header class="site"><div class="container">
+  <a class="brand" href="../index.html">Quick<span>Tools</span></a>
+  <nav class="top"><a href="../index.html">All tools</a></nav>
+</div></header>
+
+<main class="container">
+  <div class="tool">
+    <h1>Percentage Calculator</h1>
+    <p class="lede">Three common percentage questions, answered instantly.</p>
+
+    <label for="mode">What do you want to calculate?</label>
+    <select id="mode">
+      <option value="of">What is X% of Y?</option>
+      <option value="isWhat">X is what percent of Y?</option>
+      <option value="change">Percentage change from X to Y</option>
+    </select>
+
+    <div class="row">
+      <div><label for="a" id="la">X</label><input type="number" id="a" step="any" inputmode="decimal"></div>
+      <div><label for="b" id="lb">Y</label><input type="number" id="b" step="any" inputmode="decimal"></div>
+    </div>
+
+    <button class="primary" id="go">Calculate</button>
+
+    <div class="result hidden" id="out"><span class="big" id="answer">—</span><span class="muted" id="explain"></span></div>
+    <a class="back" href="../index.html">← Back to all tools</a>
+  </div>
+
+  <div class="ad-slot">Ad space — replace with your ad network code after approval</div>
+
+  <section class="seo">
+    <h2>How to calculate percentages</h2>
+    <p><strong>X% of Y:</strong> multiply Y by X and divide by 100. <strong>X is what percent of Y:</strong> divide X by Y and multiply by 100. <strong>Percentage change:</strong> subtract the old value from the new value, divide by the old value, and multiply by 100 — a positive result is an increase, a negative result is a decrease.</p>
+    <h2>Everyday uses</h2>
+    <p>Percentages show up in discounts, tips, tax, grades, interest, and statistics. This calculator covers the three questions people search for most, so you can switch modes without re-learning the formula each time.</p>
+  </section>
+</main>
+
+<footer class="site"><div class="container"><div>© <span id="yr"></span> QuickTools</div><div><a href="../index.html">More free tools →</a></div></div></footer>
+
+<script>
+const la = document.getElementById('la'), lb = document.getElementById('lb');
+const mode = document.getElementById('mode');
+function relabel() {
+  const m = mode.value;
+  if (m === 'of') { la.textContent = 'Percent (X%)'; lb.textContent = 'Of value (Y)'; }
+  else if (m === 'isWhat') { la.textContent = 'Value (X)'; lb.textContent = 'Of total (Y)'; }
+  else { la.textContent = 'From (old value)'; lb.textContent = 'To (new value)'; }
+}
+mode.addEventListener('change', relabel); relabel();
+function round(n) { return Math.round(n * 1e6) / 1e6; }
+function calc() {
+  const a = parseFloat(document.getElementById('a').value);
+  const b = parseFloat(document.getElementById('b').value);
+  const ans = document.getElementById('answer'), exp = document.getElementById('explain');
+  if (isNaN(a) || isNaN(b)) { ans.textContent = 'Enter both values'; exp.textContent=''; }
+  else if (mode.value === 'of') { ans.textContent = round(a*b/100); exp.textContent = `is ${a}% of ${b}`; }
+  else if (mode.value === 'isWhat') {
+    if (b === 0) { ans.textContent = 'Undefined'; exp.textContent = 'cannot divide by zero'; }
+    else { ans.textContent = round(a/b*100) + '%'; exp.textContent = `${a} is this percent of ${b}`; }
+  } else {
+    if (a === 0) { ans.textContent = 'Undefined'; exp.textContent = 'cannot divide by zero'; }
+    else { const c = (b-a)/a*100; ans.textContent = (c>=0?'+':'') + round(c) + '%'; exp.textContent = c>=0 ? 'increase' : 'decrease'; }
+  }
+  document.getElementById('out').classList.remove('hidden');
+}
+document.getElementById('go').addEventListener('click', calc);
+['a','b'].forEach(id => document.getElementById(id).addEventListener('keyup', e => { if (e.key==='Enter') calc(); }));
+document.getElementById('yr').textContent = new Date().getFullYear();
+</script>
+</body>
+</html>

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tip Calculator — Split the Bill & Calculate Tip | QuickTools</title>
+<meta name="description" content="Free tip calculator. Enter your bill, choose a tip percentage, and split between any number of people. Get the tip amount and total per person instantly.">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header class="site"><div class="container">
+  <a class="brand" href="../index.html">Quick<span>Tools</span></a>
+  <nav class="top"><a href="../index.html">All tools</a></nav>
+</div></header>
+
+<main class="container">
+  <div class="tool">
+    <h1>Tip Calculator</h1>
+    <p class="lede">Split the bill and find the perfect tip in seconds.</p>
+
+    <label for="bill">Bill amount ($)</label>
+    <input type="number" id="bill" placeholder="e.g. 54.20" min="0" step="0.01" inputmode="decimal">
+
+    <div class="row">
+      <div>
+        <label for="tip">Tip %</label>
+        <input type="number" id="tip" value="18" min="0" step="1" inputmode="decimal">
+      </div>
+      <div>
+        <label for="people">Split between</label>
+        <input type="number" id="people" value="1" min="1" step="1" inputmode="numeric">
+      </div>
+    </div>
+
+    <button class="primary" id="go">Calculate</button>
+
+    <div class="result hidden" id="out">
+      <span class="big" id="perPerson">$0.00</span>
+      <span class="muted">per person</span>
+      <div style="margin-top:12px">Tip: <strong id="tipAmt">$0.00</strong> &nbsp;•&nbsp; Total: <strong id="total">$0.00</strong></div>
+    </div>
+    <a class="back" href="../index.html">← Back to all tools</a>
+  </div>
+
+  <div class="ad-slot">Ad space — replace with your ad network code after approval</div>
+
+  <section class="seo">
+    <h2>How to calculate a tip</h2>
+    <p>To calculate a tip, multiply the bill amount by the tip percentage (as a decimal). For example, a 18% tip on a $54.20 bill is 54.20 × 0.18 = $9.76, for a total of $63.96. To split it, divide the total by the number of people. This calculator does it all automatically and updates instantly.</p>
+    <h2>What is a standard tip?</h2>
+    <p>In the United States, 15–20% is customary for sit-down restaurant service, with 18% a common default. For exceptional service many people tip 20–25%. This tool defaults to 18% but you can set any percentage.</p>
+  </section>
+</main>
+
+<footer class="site"><div class="container"><div>© <span id="yr"></span> QuickTools</div><div><a href="../index.html">More free tools →</a></div></div></footer>
+
+<script>
+const fmt = n => '$' + (isFinite(n) ? n : 0).toFixed(2);
+function calc() {
+  const bill = parseFloat(document.getElementById('bill').value) || 0;
+  const tip = parseFloat(document.getElementById('tip').value) || 0;
+  const people = Math.max(1, parseInt(document.getElementById('people').value) || 1);
+  const tipAmt = bill * tip / 100;
+  const total = bill + tipAmt;
+  document.getElementById('tipAmt').textContent = fmt(tipAmt);
+  document.getElementById('total').textContent = fmt(total);
+  document.getElementById('perPerson').textContent = fmt(total / people);
+  document.getElementById('out').classList.remove('hidden');
+}
+document.getElementById('go').addEventListener('click', calc);
+['bill','tip','people'].forEach(id =>
+  document.getElementById(id).addEventListener('keyup', e => { if (e.key === 'Enter') calc(); }));
+document.getElementById('yr').textContent = new Date().getFullYear();
+</script>
+</body>
+</html>

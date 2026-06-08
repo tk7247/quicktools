@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Loan Calculator — Monthly Payment & Interest | QuickTools</title>
+<meta name="description" content="Free loan calculator. Enter the loan amount, interest rate, and term to see your monthly payment, total interest, and total cost. Works for car, personal, and home loans.">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header class="site"><div class="container">
+  <a class="brand" href="../index.html">Quick<span>Tools</span></a>
+  <nav class="top"><a href="../index.html">All tools</a></nav>
+</div></header>
+
+<main class="container">
+  <div class="tool">
+    <h1>Loan Calculator</h1>
+    <p class="lede">Estimate your monthly payment and the total interest you'll pay.</p>
+
+    <label for="amount">Loan amount ($)</label>
+    <input type="number" id="amount" placeholder="e.g. 20000" min="0" step="100" inputmode="decimal">
+
+    <div class="row">
+      <div>
+        <label for="rate">Annual interest rate (%)</label>
+        <input type="number" id="rate" placeholder="e.g. 6.5" min="0" step="0.01" inputmode="decimal">
+      </div>
+      <div>
+        <label for="years">Term (years)</label>
+        <input type="number" id="years" placeholder="e.g. 5" min="0.1" step="0.5" inputmode="decimal">
+      </div>
+    </div>
+
+    <button class="primary" id="go">Calculate</button>
+
+    <div class="result hidden" id="out">
+      <span class="big" id="monthly">$0.00</span>
+      <span class="muted">per month</span>
+      <div style="margin-top:12px">Total interest: <strong id="interest">$0.00</strong> &nbsp;•&nbsp; Total paid: <strong id="total">$0.00</strong></div>
+    </div>
+    <a class="back" href="../index.html">← Back to all tools</a>
+  </div>
+
+  <div class="ad-slot">Ad space — replace with your ad network code after approval</div>
+
+  <section class="seo">
+    <h2>How loan payments are calculated</h2>
+    <p>Monthly payments use the amortization formula: M = P · r · (1 + r)^n / ((1 + r)^n − 1), where P is the principal, r is the monthly interest rate (annual rate ÷ 12), and n is the number of monthly payments. Early payments go mostly toward interest; later payments go mostly toward principal.</p>
+    <h2>Lower your total interest</h2>
+    <p>A shorter term or a lower rate dramatically reduces total interest. Even small extra payments toward principal can shorten the loan and save money. Use this calculator to compare scenarios before you borrow.</p>
+  </section>
+</main>
+
+<footer class="site"><div class="container"><div>© <span id="yr"></span> QuickTools</div><div><a href="../index.html">More free tools →</a></div></div></footer>
+
+<script>
+const fmt = n => '$' + (isFinite(n) ? n : 0).toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2});
+function calc() {
+  const P = parseFloat(document.getElementById('amount').value) || 0;
+  const annual = parseFloat(document.getElementById('rate').value) || 0;
+  const years = parseFloat(document.getElementById('years').value) || 0;
+  const n = Math.round(years * 12);
+  const r = annual / 100 / 12;
+  let monthly;
+  if (n <= 0 || P <= 0) { monthly = 0; }
+  else if (r === 0) { monthly = P / n; }
+  else { monthly = P * r * Math.pow(1 + r, n) / (Math.pow(1 + r, n) - 1); }
+  const totalPaid = monthly * n;
+  const interest = totalPaid - P;
+  document.getElementById('monthly').textContent = fmt(monthly);
+  document.getElementById('interest').textContent = fmt(interest > 0 ? interest : 0);
+  document.getElementById('total').textContent = fmt(totalPaid > 0 ? totalPaid : 0);
+  document.getElementById('out').classList.remove('hidden');
+}
+document.getElementById('go').addEventListener('click', calc);
+['amount','rate','years'].forEach(id =>
+  document.getElementById(id).addEventListener('keyup', e => { if (e.key === 'Enter') calc(); }));
+document.getElementById('yr').textContent = new Date().getFullYear();
+</script>
+</body>
+</html>

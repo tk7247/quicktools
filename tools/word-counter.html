@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Word Counter — Count Words, Characters & Reading Time | QuickTools</title>
+<meta name="description" content="Free online word counter. Count words, characters, sentences, and reading time as you type. Perfect for essays, articles, and social media posts. Private and instant.">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header class="site"><div class="container">
+  <a class="brand" href="../index.html">Quick<span>Tools</span></a>
+  <nav class="top"><a href="../index.html">All tools</a></nav>
+</div></header>
+
+<main class="container">
+  <div class="tool">
+    <h1>Word Counter</h1>
+    <p class="lede">Counts update live as you type. Nothing leaves your browser.</p>
+
+    <label for="txt">Paste or type your text</label>
+    <textarea id="txt" rows="10" placeholder="Start typing..."></textarea>
+
+    <div class="result" id="out" style="display:flex; gap:24px; flex-wrap:wrap">
+      <div><span class="big" id="words">0</span><span class="muted">words</span></div>
+      <div><span class="big" id="chars">0</span><span class="muted">characters</span></div>
+      <div><span class="big" id="sentences">0</span><span class="muted">sentences</span></div>
+      <div><span class="big" id="read">0s</span><span class="muted">reading time</span></div>
+    </div>
+    <a class="back" href="../index.html">← Back to all tools</a>
+  </div>
+
+  <div class="ad-slot">Ad space — replace with your ad network code after approval</div>
+
+  <section class="seo">
+    <h2>Why count words?</h2>
+    <p>Word and character counts matter for essays with length requirements, articles, meta descriptions, tweets, and other posts with limits. This counter updates instantly as you type and also estimates reading time based on an average of 200 words per minute.</p>
+    <h2>Private by design</h2>
+    <p>Your text never leaves your device — all counting happens locally in your browser. Paste sensitive drafts without worry; nothing is uploaded or stored.</p>
+  </section>
+</main>
+
+<footer class="site"><div class="container"><div>© <span id="yr"></span> QuickTools</div><div><a href="../index.html">More free tools →</a></div></div></footer>
+
+<script>
+const txt = document.getElementById('txt');
+function update() {
+  const t = txt.value;
+  const words = (t.trim().match(/\S+/g) || []).length;
+  const chars = t.length;
+  const sentences = (t.match(/[.!?]+(\s|$)/g) || []).length;
+  document.getElementById('words').textContent = words.toLocaleString();
+  document.getElementById('chars').textContent = chars.toLocaleString();
+  document.getElementById('sentences').textContent = sentences.toLocaleString();
+  const secs = Math.round(words / 200 * 60);
+  document.getElementById('read').textContent = secs < 60 ? secs + 's' : Math.floor(secs/60) + 'm ' + (secs%60) + 's';
+}
+txt.addEventListener('input', update);
+document.getElementById('yr').textContent = new Date().getFullYear();
+update();
+</script>
+</body>
+</html>
