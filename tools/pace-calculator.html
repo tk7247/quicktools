@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Running Pace Calculator — Pace, Speed & Time | QuickTools</title>
+<meta name="description" content="Free running pace calculator. Enter your distance and time to get your pace per mile and per kilometer, plus your speed. Perfect for runners and race planning.">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header class="site"><div class="container">
+  <a class="brand" href="../index.html">Quick<span>Tools</span></a>
+  <nav class="top"><a href="../index.html">All tools</a></nav>
+</div></header>
+
+<main class="container">
+  <div class="tool">
+    <h1>Running Pace Calculator</h1>
+    <p class="lede">Get your pace and speed from distance and time.</p>
+
+    <div class="row">
+      <div><label for="dist">Distance</label><input type="number" id="dist" step="any" min="0" inputmode="decimal" placeholder="e.g. 5"></div>
+      <div><label for="unit">Unit</label><select id="unit"><option value="km">kilometers</option><option value="mi">miles</option></select></div>
+    </div>
+    <label>Time (hh : mm : ss)</label>
+    <div class="row">
+      <div><input type="number" id="h" min="0" step="1" placeholder="h" inputmode="numeric"></div>
+      <div><input type="number" id="m" min="0" step="1" placeholder="m" inputmode="numeric"></div>
+      <div><input type="number" id="s" min="0" step="1" placeholder="s" inputmode="numeric"></div>
+    </div>
+
+    <button class="primary" id="go">Calculate</button>
+
+    <div class="result hidden" id="out">
+      <span class="big" id="pacekm">—</span><span class="muted">per kilometer</span>
+      <div style="margin-top:12px">Per mile: <strong id="pacemi">—</strong> &nbsp;•&nbsp; Speed: <strong id="speed">—</strong></div>
+    </div>
+    <a class="back" href="../index.html">← Back to all tools</a>
+  </div>
+
+  <div class="reco">
+    <h3>Run more comfortably</h3>
+    <p>The right running shoes make every mile easier — browse top-rated picks.</p>
+    <a class="btn" href="https://www.amazon.com/s?k=running+shoes&tag=quicktools0b-20" target="_blank" rel="sponsored nofollow noopener">Shop running shoes on Amazon →</a>
+    <div class="disclosure">As an Amazon Associate, QuickTools earns from qualifying purchases.</div>
+  </div>
+
+  <div class="ad-slot">Ad space — replace with your ad network code after approval</div>
+
+  <section class="seo">
+    <h2>Understanding running pace</h2>
+    <p>Pace is how long it takes to cover one unit of distance — usually shown as minutes per kilometer or minutes per mile. It's calculated by dividing your total time by the distance. Speed is the inverse: distance covered per hour. Runners use pace to plan races and pace themselves over long distances.</p>
+    <h2>Plan your race</h2>
+    <p>Enter a goal distance and target time to find the pace you need to hold. One mile equals about 1.609 kilometers, so a 5:00/km pace is roughly 8:03/mile.</p>
+  </section>
+</main>
+
+<footer class="site"><div class="container"><div>© <span id="yr"></span> QuickTools</div><div><a href="../index.html">More free tools →</a></div></div></footer>
+
+<script>
+function fmtPace(secsPerUnit) {
+  if (!isFinite(secsPerUnit) || secsPerUnit <= 0) return '—';
+  const m = Math.floor(secsPerUnit / 60);
+  const s = Math.round(secsPerUnit % 60);
+  return m + ':' + String(s).padStart(2, '0');
+}
+function calc() {
+  const dist = parseFloat(document.getElementById('dist').value) || 0;
+  const unit = document.getElementById('unit').value;
+  const h = parseInt(document.getElementById('h').value) || 0;
+  const m = parseInt(document.getElementById('m').value) || 0;
+  const s = parseInt(document.getElementById('s').value) || 0;
+  const totalSecs = h*3600 + m*60 + s;
+  const out = document.getElementById('out');
+  if (dist <= 0 || totalSecs <= 0) {
+    document.getElementById('pacekm').textContent = 'Enter distance and time';
+    document.getElementById('pacemi').textContent = '—'; document.getElementById('speed').textContent = '—';
+    out.classList.remove('hidden'); return;
+  }
+  const distKm = unit === 'km' ? dist : dist * 1.609344;
+  const distMi = unit === 'mi' ? dist : dist / 1.609344;
+  document.getElementById('pacekm').textContent = fmtPace(totalSecs / distKm) + ' /km';
+  document.getElementById('pacemi').textContent = fmtPace(totalSecs / distMi) + ' /mi';
+  const kmh = distKm / (totalSecs / 3600);
+  document.getElementById('speed').textContent = (Math.round(kmh*100)/100) + ' km/h (' + (Math.round(kmh/1.609344*100)/100) + ' mph)';
+  out.classList.remove('hidden');
+}
+document.getElementById('go').addEventListener('click', calc);
+['dist','h','m','s'].forEach(id => document.getElementById(id).addEventListener('keyup', e => { if (e.key==='Enter') calc(); }));
+document.getElementById('yr').textContent = new Date().getFullYear();
+</script>
+</body>
+</html>

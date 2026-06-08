@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Electricity Cost Calculator — Appliance Running Cost | QuickTools</title>
+<meta name="description" content="Free electricity cost calculator. Find out how much an appliance costs to run per day, month, and year from its wattage, hours of use, and your energy price.">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header class="site"><div class="container">
+  <a class="brand" href="../index.html">Quick<span>Tools</span></a>
+  <nav class="top"><a href="../index.html">All tools</a></nav>
+</div></header>
+
+<main class="container">
+  <div class="tool">
+    <h1>Electricity Cost Calculator</h1>
+    <p class="lede">See what any appliance costs to run.</p>
+
+    <div class="row">
+      <div><label for="watts">Power (watts)</label><input type="number" id="watts" step="any" min="0" inputmode="decimal" placeholder="e.g. 1500"></div>
+      <div><label for="hours">Hours used per day</label><input type="number" id="hours" step="any" min="0" max="24" inputmode="decimal" placeholder="e.g. 3"></div>
+      <div><label for="price">Price per kWh ($)</label><input type="number" id="price" step="any" min="0" inputmode="decimal" placeholder="e.g. 0.17"></div>
+    </div>
+
+    <button class="primary" id="go">Calculate</button>
+
+    <div class="result hidden" id="out">
+      <span class="big" id="month">$0.00</span><span class="muted">per month</span>
+      <div style="margin-top:12px">Per day: <strong id="day">$0.00</strong> &nbsp;•&nbsp; Per year: <strong id="year">$0.00</strong> &nbsp;•&nbsp; Energy: <strong id="kwh">0</strong> kWh/day</div>
+    </div>
+    <a class="back" href="../index.html">← Back to all tools</a>
+  </div>
+
+  <div class="reco">
+    <h3>Find your energy hogs</h3>
+    <p>A plug-in power meter or smart plug shows exactly what each device really uses.</p>
+    <a class="btn" href="https://www.amazon.com/s?k=plug+in+power+energy+monitor&tag=quicktools0b-20" target="_blank" rel="sponsored nofollow noopener">Shop energy monitors on Amazon →</a>
+    <div class="disclosure">As an Amazon Associate, QuickTools earns from qualifying purchases.</div>
+  </div>
+
+  <div class="ad-slot">Ad space — replace with your ad network code after approval</div>
+
+  <section class="seo">
+    <h2>How appliance running cost works</h2>
+    <p>Electricity is billed per kilowatt-hour (kWh). An appliance's daily energy use equals its wattage × hours used ÷ 1000. Multiply by your price per kWh for the daily cost, then by 30 and 365 for monthly and yearly figures. High-wattage devices used for long periods — heaters, dryers, air conditioners — cost the most.</p>
+    <h2>Save on energy bills</h2>
+    <p>Find your price per kWh on your electricity bill. Use this tool to compare appliances, spot energy hogs, and decide whether an efficient upgrade pays for itself.</p>
+  </section>
+</main>
+
+<footer class="site"><div class="container"><div>© <span id="yr"></span> QuickTools</div><div><a href="../index.html">More free tools →</a></div></div></footer>
+
+<script>
+const fmt = n => '$' + (isFinite(n) ? n : 0).toFixed(2);
+function calc() {
+  const watts = parseFloat(document.getElementById('watts').value) || 0;
+  const hours = parseFloat(document.getElementById('hours').value) || 0;
+  const price = parseFloat(document.getElementById('price').value) || 0;
+  const kwhPerDay = watts * hours / 1000;
+  const day = kwhPerDay * price;
+  document.getElementById('day').textContent = fmt(day);
+  document.getElementById('month').textContent = fmt(day * 30);
+  document.getElementById('year').textContent = fmt(day * 365);
+  document.getElementById('kwh').textContent = Math.round(kwhPerDay * 1000) / 1000;
+  document.getElementById('out').classList.remove('hidden');
+}
+document.getElementById('go').addEventListener('click', calc);
+['watts','hours','price'].forEach(id => document.getElementById(id).addEventListener('keyup', e => { if (e.key==='Enter') calc(); }));
+document.getElementById('yr').textContent = new Date().getFullYear();
+</script>
+</body>
+</html>

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Markup & Margin Calculator — Profit, Margin, Markup | QuickTools</title>
+<meta name="description" content="Free markup and margin calculator. Enter your cost and selling price to see profit, profit margin, and markup percentage. Essential for pricing and resale.">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header class="site"><div class="container">
+  <a class="brand" href="../index.html">Quick<span>Tools</span></a>
+  <nav class="top"><a href="../index.html">All tools</a></nav>
+</div></header>
+
+<main class="container">
+  <div class="tool">
+    <h1>Markup &amp; Margin Calculator</h1>
+    <p class="lede">Turn cost and price into profit, margin, and markup.</p>
+
+    <div class="row">
+      <div><label for="cost">Cost ($)</label><input type="number" id="cost" step="any" min="0" inputmode="decimal" placeholder="e.g. 40"></div>
+      <div><label for="price">Selling price ($)</label><input type="number" id="price" step="any" min="0" inputmode="decimal" placeholder="e.g. 60"></div>
+    </div>
+
+    <button class="primary" id="go">Calculate</button>
+
+    <div class="result hidden" id="out">
+      <span class="big" id="profit">$0.00</span><span class="muted">profit per unit</span>
+      <div style="margin-top:12px">Profit margin: <strong id="margin">—</strong> &nbsp;•&nbsp; Markup: <strong id="markup">—</strong></div>
+    </div>
+    <a class="back" href="../index.html">← Back to all tools</a>
+  </div>
+
+  <div class="reco">
+    <h3>Price smarter</h3>
+    <p>Best-selling books on pricing, profit, and running a small business.</p>
+    <a class="btn" href="https://www.amazon.com/s?k=small+business+pricing+strategy+book&tag=quicktools0b-20" target="_blank" rel="sponsored nofollow noopener">Browse business books on Amazon →</a>
+    <div class="disclosure">As an Amazon Associate, QuickTools earns from qualifying purchases.</div>
+  </div>
+
+  <div class="ad-slot">Ad space — replace with your ad network code after approval</div>
+
+  <section class="seo">
+    <h2>Markup vs. margin — what's the difference?</h2>
+    <p><strong>Markup</strong> is profit as a percentage of <em>cost</em>: (price − cost) ÷ cost. <strong>Margin</strong> is profit as a percentage of <em>selling price</em>: (price − cost) ÷ price. They describe the same profit from different angles, so a 50% markup is only a 33% margin. Confusing the two is a common pricing mistake.</p>
+    <h2>Pricing your products</h2>
+    <p>Use margin to understand how much of each sale you keep, and markup to set a price from your cost. Don't forget fees, shipping, and taxes when pricing for real profit.</p>
+  </section>
+</main>
+
+<footer class="site"><div class="container"><div>© <span id="yr"></span> QuickTools</div><div><a href="../index.html">More free tools →</a></div></div></footer>
+
+<script>
+const fmt = n => '$' + (isFinite(n) ? n : 0).toFixed(2);
+function calc() {
+  const cost = parseFloat(document.getElementById('cost').value) || 0;
+  const price = parseFloat(document.getElementById('price').value) || 0;
+  const profit = price - cost;
+  document.getElementById('profit').textContent = fmt(profit);
+  document.getElementById('margin').textContent = price > 0 ? (Math.round(profit/price*1000)/10) + '%' : '—';
+  document.getElementById('markup').textContent = cost > 0 ? (Math.round(profit/cost*1000)/10) + '%' : '—';
+  document.getElementById('out').classList.remove('hidden');
+}
+document.getElementById('go').addEventListener('click', calc);
+['cost','price'].forEach(id => document.getElementById(id).addEventListener('keyup', e => { if (e.key==='Enter') calc(); }));
+document.getElementById('yr').textContent = new Date().getFullYear();
+</script>
+</body>
+</html>

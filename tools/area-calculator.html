@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Area Calculator — Square Footage for Rooms & Shapes | QuickTools</title>
+<meta name="description" content="Free area and square footage calculator. Find the area of a rectangle, circle, or triangle for rooms, gardens, and projects. Works in feet or meters.">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header class="site"><div class="container">
+  <a class="brand" href="../index.html">Quick<span>Tools</span></a>
+  <nav class="top"><a href="../index.html">All tools</a></nav>
+</div></header>
+
+<main class="container">
+  <div class="tool">
+    <h1>Area Calculator</h1>
+    <p class="lede">Square footage for rooms, gardens, and projects.</p>
+
+    <div class="row">
+      <div><label for="shape">Shape</label><select id="shape"><option value="rect">Rectangle / Square</option><option value="circle">Circle</option><option value="triangle">Triangle</option></select></div>
+      <div><label for="unit">Unit</label><select id="unit"><option value="ft">feet</option><option value="m">meters</option></select></div>
+    </div>
+
+    <div id="fields"></div>
+
+    <button class="primary" id="go">Calculate</button>
+
+    <div class="result hidden" id="out"><span class="big" id="area">—</span><span class="muted" id="unitLabel"></span></div>
+    <a class="back" href="../index.html">← Back to all tools</a>
+  </div>
+
+  <div class="reco">
+    <h3>Measure with confidence</h3>
+    <p>A good tape measure or laser measure makes project estimates quick and accurate.</p>
+    <a class="btn" href="https://www.amazon.com/s?k=laser+tape+measure&tag=quicktools0b-20" target="_blank" rel="sponsored nofollow noopener">Shop measuring tools on Amazon →</a>
+    <div class="disclosure">As an Amazon Associate, QuickTools earns from qualifying purchases.</div>
+  </div>
+
+  <div class="ad-slot">Ad space — replace with your ad network code after approval</div>
+
+  <section class="seo">
+    <h2>How to calculate area</h2>
+    <p>For a rectangle, multiply length by width. For a circle, multiply pi by the radius squared. For a triangle, multiply the base by the height and divide by two. The result is in square units — square feet or square meters — which is what you need for flooring, paint, turf, and landscaping.</p>
+    <h2>Square footage for projects</h2>
+    <p>Measure your room or area, enter the dimensions, and use the square footage to estimate how much material to buy. Add 5–10% extra for waste and cuts.</p>
+  </section>
+</main>
+
+<footer class="site"><div class="container"><div>© <span id="yr"></span> QuickTools</div><div><a href="../index.html">More free tools →</a></div></div></footer>
+
+<script>
+const shape = document.getElementById('shape'), fields = document.getElementById('fields');
+function renderFields() {
+  const s = shape.value;
+  if (s === 'rect') fields.innerHTML = '<div class="row"><div><label>Length</label><input type="number" class="f" id="a" step="any" inputmode="decimal"></div><div><label>Width</label><input type="number" class="f" id="b" step="any" inputmode="decimal"></div></div>';
+  else if (s === 'circle') fields.innerHTML = '<div class="row"><div><label>Radius</label><input type="number" class="f" id="a" step="any" inputmode="decimal"></div></div>';
+  else fields.innerHTML = '<div class="row"><div><label>Base</label><input type="number" class="f" id="a" step="any" inputmode="decimal"></div><div><label>Height</label><input type="number" class="f" id="b" step="any" inputmode="decimal"></div></div>';
+  fields.querySelectorAll('.f').forEach(el => el.addEventListener('keyup', e => { if (e.key==='Enter') calc(); }));
+}
+shape.addEventListener('change', renderFields); renderFields();
+function calc() {
+  const s = shape.value;
+  const a = parseFloat((document.getElementById('a')||{}).value) || 0;
+  const bEl = document.getElementById('b');
+  const b = bEl ? (parseFloat(bEl.value) || 0) : 0;
+  let area = 0;
+  if (s === 'rect') area = a * b;
+  else if (s === 'circle') area = Math.PI * a * a;
+  else area = 0.5 * a * b;
+  document.getElementById('area').textContent = (Math.round(area * 100) / 100).toLocaleString();
+  document.getElementById('unitLabel').textContent = 'square ' + (document.getElementById('unit').value === 'ft' ? 'feet' : 'meters');
+  document.getElementById('out').classList.remove('hidden');
+}
+document.getElementById('go').addEventListener('click', calc);
+document.getElementById('yr').textContent = new Date().getFullYear();
+</script>
+</body>
+</html>
