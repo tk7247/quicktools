@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sales Tax Calculator — Add or Remove Tax | QuickTools</title>
+<meta name="description" content="Free sales tax calculator. Add tax to a price or work out the pre-tax amount from a total. See the tax amount and final price instantly.">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header class="site"><div class="container">
+  <a class="brand" href="../index.html">Quick<span>Tools</span></a>
+  <nav class="top"><a href="../index.html">All tools</a></nav>
+</div></header>
+
+<main class="container">
+  <div class="tool">
+    <h1>Sales Tax Calculator</h1>
+    <p class="lede">Add tax to a price, or pull the tax out of a total.</p>
+
+    <label for="mode">Mode</label>
+    <select id="mode">
+      <option value="add">Add tax to a pre-tax price</option>
+      <option value="remove">Remove tax from a total</option>
+    </select>
+
+    <div class="row">
+      <div><label id="lamt" for="amt">Pre-tax price ($)</label><input type="number" id="amt" step="0.01" min="0" inputmode="decimal" placeholder="e.g. 49.99"></div>
+      <div><label for="rate">Tax rate (%)</label><input type="number" id="rate" step="0.001" min="0" inputmode="decimal" placeholder="e.g. 8.25"></div>
+    </div>
+
+    <button class="primary" id="go">Calculate</button>
+
+    <div class="result hidden" id="out">
+      <span class="big" id="total">$0.00</span>
+      <span class="muted" id="totalLabel">total with tax</span>
+      <div style="margin-top:12px">Tax amount: <strong id="tax">$0.00</strong> &nbsp;•&nbsp; <span id="otherLabel">Pre-tax price</span>: <strong id="other">$0.00</strong></div>
+    </div>
+    <a class="back" href="../index.html">← Back to all tools</a>
+  </div>
+
+  <div class="ad-slot">Ad space — replace with your ad network code after approval</div>
+
+  <section class="seo">
+    <h2>How to calculate sales tax</h2>
+    <p>To add sales tax, multiply the price by the tax rate (as a decimal) and add it to the price. For example, 8.25% tax on $49.99 is $4.12, for a total of $54.11. To remove tax from a total, divide the total by (1 + rate) to recover the original pre-tax price.</p>
+    <h2>Rates vary by location</h2>
+    <p>Sales tax rates differ by country, state, county, and city, and some items are exempt. Enter your local combined rate for an accurate figure. This tool is for estimates — check your jurisdiction's official rate for exact amounts.</p>
+  </section>
+</main>
+
+<footer class="site"><div class="container"><div>© <span id="yr"></span> QuickTools</div><div><a href="../index.html">More free tools →</a></div></div></footer>
+
+<script>
+const fmt = n => '$' + (isFinite(n) ? n : 0).toFixed(2);
+const mode = document.getElementById('mode'), lamt = document.getElementById('lamt');
+function relabel() {
+  lamt.textContent = mode.value === 'add' ? 'Pre-tax price ($)' : 'Total with tax ($)';
+}
+mode.addEventListener('change', relabel); relabel();
+function calc() {
+  const amt = parseFloat(document.getElementById('amt').value) || 0;
+  const rate = (parseFloat(document.getElementById('rate').value) || 0) / 100;
+  let pretax, tax, total;
+  if (mode.value === 'add') { pretax = amt; tax = amt * rate; total = amt + tax; }
+  else { total = amt; pretax = rate === -1 ? 0 : amt / (1 + rate); tax = total - pretax; }
+  document.getElementById('total').textContent = fmt(mode.value === 'add' ? total : total);
+  document.getElementById('totalLabel').textContent = mode.value === 'add' ? 'total with tax' : 'total entered';
+  document.getElementById('tax').textContent = fmt(tax);
+  document.getElementById('otherLabel').textContent = mode.value === 'add' ? 'Pre-tax price' : 'Pre-tax price';
+  document.getElementById('other').textContent = fmt(pretax);
+  document.getElementById('out').classList.remove('hidden');
+}
+document.getElementById('go').addEventListener('click', calc);
+['amt','rate'].forEach(id => document.getElementById(id).addEventListener('keyup', e => { if (e.key==='Enter') calc(); }));
+document.getElementById('yr').textContent = new Date().getFullYear();
+</script>
+</body>
+</html>

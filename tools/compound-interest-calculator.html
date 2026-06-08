@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Compound Interest Calculator — Savings Growth | QuickTools</title>
+<meta name="description" content="Free compound interest calculator. See how your savings or investment grows over time with regular contributions. Shows final balance, contributions, and interest earned.">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header class="site"><div class="container">
+  <a class="brand" href="../index.html">Quick<span>Tools</span></a>
+  <nav class="top"><a href="../index.html">All tools</a></nav>
+</div></header>
+
+<main class="container">
+  <div class="tool">
+    <h1>Compound Interest Calculator</h1>
+    <p class="lede">See how savings and investments grow over time.</p>
+
+    <label for="p">Starting amount ($)</label>
+    <input type="number" id="p" placeholder="e.g. 1000" min="0" step="any" inputmode="decimal">
+
+    <div class="row">
+      <div><label for="pmt">Monthly contribution ($)</label><input type="number" id="pmt" placeholder="e.g. 100" min="0" step="any" inputmode="decimal"></div>
+      <div><label for="rate">Annual return (%)</label><input type="number" id="rate" placeholder="e.g. 7" min="0" step="any" inputmode="decimal"></div>
+    </div>
+    <div class="row">
+      <div><label for="years">Years</label><input type="number" id="years" placeholder="e.g. 20" min="0" step="any" inputmode="decimal"></div>
+      <div><label for="freq">Compounding</label>
+        <select id="freq"><option value="12" selected>Monthly</option><option value="4">Quarterly</option><option value="1">Annually</option><option value="365">Daily</option></select>
+      </div>
+    </div>
+
+    <button class="primary" id="go">Calculate</button>
+
+    <div class="result hidden" id="out">
+      <span class="big" id="balance">$0.00</span>
+      <span class="muted">final balance</span>
+      <div style="margin-top:12px">Total contributed: <strong id="contrib">$0.00</strong> &nbsp;•&nbsp; Interest earned: <strong id="interest">$0.00</strong></div>
+    </div>
+    <a class="back" href="../index.html">← Back to all tools</a>
+  </div>
+
+  <div class="ad-slot">Ad space — replace with your ad network code after approval</div>
+
+  <section class="seo">
+    <h2>How compound interest works</h2>
+    <p>Compound interest is interest earned on both your original money and the interest it has already earned. Over time this "interest on interest" accelerates growth — which is why starting early matters so much. The formula combines your starting balance grown at the compound rate with the future value of your regular contributions.</p>
+    <h2>The power of contributions</h2>
+    <p>Small, regular contributions add up dramatically over decades. Try setting a monthly amount and a 20–30 year horizon to see how consistent investing outpaces a one-time deposit. Returns are not guaranteed; this is an estimate for planning.</p>
+  </section>
+</main>
+
+<footer class="site"><div class="container"><div>© <span id="yr"></span> QuickTools</div><div><a href="../index.html">More free tools →</a></div></div></footer>
+
+<script>
+const fmt = n => '$' + (isFinite(n) ? n : 0).toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2});
+function calc() {
+  const P = parseFloat(document.getElementById('p').value) || 0;
+  const pmtMonthly = parseFloat(document.getElementById('pmt').value) || 0;
+  const rate = (parseFloat(document.getElementById('rate').value) || 0) / 100;
+  const years = parseFloat(document.getElementById('years').value) || 0;
+  const n = parseInt(document.getElementById('freq').value);
+  const t = years;
+  // Contributions are monthly; convert to per-compounding-period.
+  const periods = n * t;
+  const i = rate / n;
+  const contribPerPeriod = pmtMonthly * 12 / n;
+  let balance;
+  if (i === 0) { balance = P + contribPerPeriod * periods; }
+  else {
+    balance = P * Math.pow(1 + i, periods) + contribPerPeriod * (Math.pow(1 + i, periods) - 1) / i;
+  }
+  const totalContrib = P + pmtMonthly * 12 * t;
+  const interest = balance - totalContrib;
+  document.getElementById('balance').textContent = fmt(balance);
+  document.getElementById('contrib').textContent = fmt(totalContrib);
+  document.getElementById('interest').textContent = fmt(interest > 0 ? interest : 0);
+  document.getElementById('out').classList.remove('hidden');
+}
+document.getElementById('go').addEventListener('click', calc);
+['p','pmt','rate','years'].forEach(id => document.getElementById(id).addEventListener('keyup', e => { if (e.key==='Enter') calc(); }));
+document.getElementById('yr').textContent = new Date().getFullYear();
+</script>
+</body>
+</html>

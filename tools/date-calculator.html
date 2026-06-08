@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Date Calculator — Days Between Dates & Add Days | QuickTools</title>
+<meta name="description" content="Free date calculator. Find the number of days between two dates, or add and subtract days from a date. Great for deadlines, due dates, and planning.">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header class="site"><div class="container">
+  <a class="brand" href="../index.html">Quick<span>Tools</span></a>
+  <nav class="top"><a href="../index.html">All tools</a></nav>
+</div></header>
+
+<main class="container">
+  <div class="tool">
+    <h1>Date Calculator</h1>
+    <p class="lede">Days between two dates, or add and subtract days.</p>
+
+    <label for="mode">Mode</label>
+    <select id="mode">
+      <option value="between">Days between two dates</option>
+      <option value="addsub">Add or subtract days</option>
+    </select>
+
+    <div id="betweenFields">
+      <div class="row">
+        <div><label for="d1">Start date</label><input type="date" id="d1"></div>
+        <div><label for="d2">End date</label><input type="date" id="d2"></div>
+      </div>
+    </div>
+
+    <div id="addsubFields" style="display:none">
+      <div class="row">
+        <div><label for="d3">Start date</label><input type="date" id="d3"></div>
+        <div><label for="days">Days (use − to subtract)</label><input type="number" id="days" step="1" inputmode="numeric" placeholder="e.g. 90 or -30"></div>
+      </div>
+    </div>
+
+    <button class="primary" id="go">Calculate</button>
+
+    <div class="result hidden" id="out"><span class="big" id="answer">—</span><span class="muted" id="explain"></span></div>
+    <a class="back" href="../index.html">← Back to all tools</a>
+  </div>
+
+  <div class="ad-slot">Ad space — replace with your ad network code after approval</div>
+
+  <section class="seo">
+    <h2>Counting days between dates</h2>
+    <p>This tool counts the exact number of days from a start date to an end date, automatically accounting for different month lengths and leap years. Use it to track deadlines, count down to events, or work out how long ago something happened.</p>
+    <h2>Adding and subtracting days</h2>
+    <p>Switch to "Add or subtract days" to find a future or past date — handy for due dates, return windows, and project timelines. Enter a negative number to go backward in time.</p>
+  </section>
+</main>
+
+<footer class="site"><div class="container"><div>© <span id="yr"></span> QuickTools</div><div><a href="../index.html">More free tools →</a></div></div></footer>
+
+<script>
+function todayStr() { const d = new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+document.getElementById('d1').value = todayStr();
+document.getElementById('d3').value = todayStr();
+const mode = document.getElementById('mode');
+function toggle() {
+  const b = mode.value === 'between';
+  document.getElementById('betweenFields').style.display = b ? '' : 'none';
+  document.getElementById('addsubFields').style.display = b ? 'none' : '';
+}
+mode.addEventListener('change', toggle); toggle();
+function fmtDate(d) { return d.toLocaleDateString(undefined, { weekday:'long', year:'numeric', month:'long', day:'numeric' }); }
+function calc() {
+  const ans = document.getElementById('answer'), exp = document.getElementById('explain');
+  if (mode.value === 'between') {
+    const v1 = document.getElementById('d1').value, v2 = document.getElementById('d2').value;
+    if (!v1 || !v2) { ans.textContent = 'Pick both dates'; exp.textContent=''; }
+    else {
+      const a = new Date(v1+'T00:00:00'), b = new Date(v2+'T00:00:00');
+      const days = Math.round((b - a) / 86400000);
+      ans.textContent = Math.abs(days).toLocaleString() + (Math.abs(days) === 1 ? ' day' : ' days');
+      exp.textContent = days < 0 ? 'end date is before start date' : (days === 0 ? 'same day' : 'apart');
+    }
+  } else {
+    const v = document.getElementById('d3').value, n = parseInt(document.getElementById('days').value);
+    if (!v || isNaN(n)) { ans.textContent = 'Enter a date and number of days'; exp.textContent=''; }
+    else {
+      const d = new Date(v+'T00:00:00'); d.setDate(d.getDate() + n);
+      ans.textContent = fmtDate(d);
+      exp.textContent = (n >= 0 ? n + ' days after' : (-n) + ' days before') + ' the start date';
+    }
+  }
+  document.getElementById('out').classList.remove('hidden');
+}
+document.getElementById('go').addEventListener('click', calc);
+document.getElementById('yr').textContent = new Date().getFullYear();
+</script>
+</body>
+</html>

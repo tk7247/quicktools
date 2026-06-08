@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Calorie Calculator — Daily Calorie Needs (TDEE) | QuickTools</title>
+<meta name="description" content="Free calorie calculator. Estimate your BMR and daily calorie needs (TDEE) based on age, sex, height, weight, and activity level. Includes weight-loss and gain targets.">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header class="site"><div class="container">
+  <a class="brand" href="../index.html">Quick<span>Tools</span></a>
+  <nav class="top"><a href="../index.html">All tools</a></nav>
+</div></header>
+
+<main class="container">
+  <div class="tool">
+    <h1>Calorie Calculator</h1>
+    <p class="lede">Estimate your daily calorie needs to maintain, lose, or gain weight.</p>
+
+    <div class="row">
+      <div><label for="sex">Sex</label><select id="sex"><option value="m">Male</option><option value="f">Female</option></select></div>
+      <div><label for="age">Age</label><input type="number" id="age" min="1" step="1" inputmode="numeric" placeholder="e.g. 30"></div>
+      <div><label for="units">Units</label><select id="units"><option value="metric">cm / kg</option><option value="imperial">in / lb</option></select></div>
+    </div>
+    <div class="row">
+      <div><label id="lh" for="height">Height (cm)</label><input type="number" id="height" step="any" inputmode="decimal"></div>
+      <div><label id="lw" for="weight">Weight (kg)</label><input type="number" id="weight" step="any" inputmode="decimal"></div>
+    </div>
+    <label for="act">Activity level</label>
+    <select id="act">
+      <option value="1.2">Sedentary (little/no exercise)</option>
+      <option value="1.375">Lightly active (1–3 days/week)</option>
+      <option value="1.55" selected>Moderately active (3–5 days/week)</option>
+      <option value="1.725">Very active (6–7 days/week)</option>
+      <option value="1.9">Extra active (hard training/physical job)</option>
+    </select>
+
+    <button class="primary" id="go">Calculate</button>
+
+    <div class="result hidden" id="out">
+      <span class="big" id="maint">—</span>
+      <span class="muted">calories/day to maintain weight</span>
+      <div style="margin-top:12px">
+        Mild loss (−0.25 kg/wk): <strong id="loss1">—</strong> &nbsp;•&nbsp; Loss (−0.5 kg/wk): <strong id="loss2">—</strong><br>
+        Mild gain (+0.25 kg/wk): <strong id="gain1">—</strong> &nbsp;•&nbsp; BMR: <strong id="bmr">—</strong>
+      </div>
+    </div>
+    <a class="back" href="../index.html">← Back to all tools</a>
+  </div>
+
+  <div class="ad-slot">Ad space — replace with your ad network code after approval</div>
+
+  <section class="seo">
+    <h2>How daily calorie needs are estimated</h2>
+    <p>This calculator uses the Mifflin-St Jeor equation to estimate your Basal Metabolic Rate (BMR) — the calories your body burns at rest — then multiplies by an activity factor to get your Total Daily Energy Expenditure (TDEE), the calories needed to maintain your current weight.</p>
+    <h2>Losing or gaining weight</h2>
+    <p>A deficit of about 500 calories per day roughly corresponds to losing half a kilogram (about one pound) per week; a surplus does the reverse. These are estimates — individual results vary, and you should consult a healthcare professional before making major dietary changes.</p>
+  </section>
+</main>
+
+<footer class="site"><div class="container"><div>© <span id="yr"></span> QuickTools</div><div><a href="../index.html">More free tools →</a></div></div></footer>
+
+<script>
+const units = document.getElementById('units'), lh = document.getElementById('lh'), lw = document.getElementById('lw');
+function relabel() {
+  if (units.value === 'metric') { lh.textContent = 'Height (cm)'; lw.textContent = 'Weight (kg)'; }
+  else { lh.textContent = 'Height (in)'; lw.textContent = 'Weight (lb)'; }
+}
+units.addEventListener('change', relabel); relabel();
+const r = n => Math.round(n).toLocaleString();
+function calc() {
+  const sex = document.getElementById('sex').value;
+  const age = parseFloat(document.getElementById('age').value);
+  let h = parseFloat(document.getElementById('height').value);
+  let w = parseFloat(document.getElementById('weight').value);
+  const act = parseFloat(document.getElementById('act').value);
+  if (isNaN(age) || isNaN(h) || isNaN(w) || age<=0 || h<=0 || w<=0) {
+    document.getElementById('maint').textContent = 'Fill in all fields';
+    document.getElementById('out').classList.remove('hidden'); return;
+  }
+  if (units.value === 'imperial') { h = h * 2.54; w = w * 0.453592; } // to cm, kg
+  let bmr = 10*w + 6.25*h - 5*age + (sex === 'm' ? 5 : -161);
+  const tdee = bmr * act;
+  document.getElementById('maint').textContent = r(tdee) + ' cal';
+  document.getElementById('bmr').textContent = r(bmr) + ' cal';
+  document.getElementById('loss1').textContent = r(tdee - 250) + ' cal';
+  document.getElementById('loss2').textContent = r(tdee - 500) + ' cal';
+  document.getElementById('gain1').textContent = r(tdee + 250) + ' cal';
+  document.getElementById('out').classList.remove('hidden');
+}
+document.getElementById('go').addEventListener('click', calc);
+document.getElementById('yr').textContent = new Date().getFullYear();
+</script>
+</body>
+</html>
