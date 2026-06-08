@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Roman Numeral Converter — Numbers to Roman & Back | QuickTools</title>
+<meta name="description" content="Free Roman numeral converter. Convert numbers to Roman numerals and Roman numerals back to numbers instantly. Supports 1 to 3999.">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header class="site"><div class="container">
+  <a class="brand" href="../index.html">Quick<span>Tools</span></a>
+  <nav class="top"><a href="../index.html">All tools</a></nav>
+</div></header>
+
+<main class="container">
+  <div class="tool">
+    <h1>Roman Numeral Converter</h1>
+    <p class="lede">Numbers to Roman numerals — and back again.</p>
+
+    <label for="input">Enter a number (1–3999) or a Roman numeral</label>
+    <input type="text" id="input" placeholder="e.g. 2024 or MMXXIV" value="2024" autocomplete="off">
+
+    <div class="result" id="out"><span class="big" id="answer">—</span><span class="muted" id="explain"></span></div>
+    <a class="back" href="../index.html">← Back to all tools</a>
+  </div>
+
+  <div class="ad-slot">Ad space — replace with your ad network code after approval</div>
+
+  <section class="seo">
+    <h2>How Roman numerals work</h2>
+    <p>Roman numerals use seven letters: I (1), V (5), X (10), L (50), C (100), D (500), and M (1000). Values are added when larger or equal letters come first (VI = 6) and subtracted when a smaller letter precedes a larger one (IV = 4). The standard system represents numbers from 1 to 3999.</p>
+    <h2>Common examples</h2>
+    <p>4 = IV, 9 = IX, 40 = XL, 90 = XC, 400 = CD, 900 = CM. Years are a frequent use: 2024 = MMXXIV.</p>
+  </section>
+</main>
+
+<footer class="site"><div class="container"><div>© <span id="yr"></span> QuickTools</div><div><a href="../index.html">More free tools →</a></div></div></footer>
+
+<script>
+const MAP = [[1000,'M'],[900,'CM'],[500,'D'],[400,'CD'],[100,'C'],[90,'XC'],[50,'L'],[40,'XL'],[10,'X'],[9,'IX'],[5,'V'],[4,'IV'],[1,'I']];
+function toRoman(n) {
+  if (n < 1 || n > 3999) return null;
+  let out = '';
+  for (const [v, s] of MAP) { while (n >= v) { out += s; n -= v; } }
+  return out;
+}
+function fromRoman(str) {
+  const vals = { I:1, V:5, X:10, L:50, C:100, D:500, M:1000 };
+  let total = 0, prev = 0;
+  for (let i = str.length - 1; i >= 0; i--) {
+    const v = vals[str[i]];
+    if (!v) return null;
+    if (v < prev) total -= v; else { total += v; prev = v; }
+  }
+  // Validate by round-tripping.
+  return toRoman(total) === str ? total : (toRoman(total) ? total : null);
+}
+function convert() {
+  const raw = document.getElementById('input').value.trim().toUpperCase();
+  const ans = document.getElementById('answer'), exp = document.getElementById('explain');
+  if (!raw) { ans.textContent = '—'; exp.textContent = ''; return; }
+  if (/^\d+$/.test(raw)) {
+    const r = toRoman(parseInt(raw, 10));
+    if (r) { ans.textContent = r; exp.textContent = `${raw} in Roman numerals`; }
+    else { ans.textContent = 'Out of range'; exp.textContent = 'Enter a number from 1 to 3999'; }
+  } else if (/^[IVXLCDM]+$/.test(raw)) {
+    const n = fromRoman(raw);
+    if (n) { ans.textContent = n.toLocaleString(); exp.textContent = `${raw} as a number`; }
+    else { ans.textContent = 'Invalid numeral'; exp.textContent = 'Check the letters and order'; }
+  } else {
+    ans.textContent = 'Invalid input'; exp.textContent = 'Use digits (1–3999) or letters I V X L C D M';
+  }
+}
+document.getElementById('input').addEventListener('input', convert);
+convert();
+document.getElementById('yr').textContent = new Date().getFullYear();
+</script>
+</body>
+</html>

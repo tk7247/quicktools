@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Salary Calculator — Hourly to Annual Pay Converter | QuickTools</title>
+<meta name="description" content="Free salary calculator. Convert pay between hourly, daily, weekly, monthly, and yearly. Enter any amount and your hours to see all pay periods instantly.">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header class="site"><div class="container">
+  <a class="brand" href="../index.html">Quick<span>Tools</span></a>
+  <nav class="top"><a href="../index.html">All tools</a></nav>
+</div></header>
+
+<main class="container">
+  <div class="tool">
+    <h1>Salary Calculator</h1>
+    <p class="lede">Convert pay between hourly, weekly, monthly, and yearly.</p>
+
+    <div class="row">
+      <div><label for="amount">Amount ($)</label><input type="number" id="amount" step="any" min="0" inputmode="decimal" placeholder="e.g. 25"></div>
+      <div><label for="per">is per</label>
+        <select id="per"><option value="hour" selected>Hour</option><option value="day">Day</option><option value="week">Week</option><option value="month">Month</option><option value="year">Year</option></select>
+      </div>
+    </div>
+    <div class="row">
+      <div><label for="hpw">Hours per week</label><input type="number" id="hpw" value="40" step="any" min="1" inputmode="decimal"></div>
+      <div><label for="dpw">Days per week</label><input type="number" id="dpw" value="5" step="any" min="1" inputmode="decimal"></div>
+    </div>
+
+    <button class="primary" id="go">Calculate</button>
+
+    <div class="result hidden" id="out">
+      <span class="big" id="year">$0</span><span class="muted">per year</span>
+      <div style="margin-top:12px">
+        Hourly: <strong id="hour">$0</strong> &nbsp;•&nbsp; Daily: <strong id="day">$0</strong><br>
+        Weekly: <strong id="week">$0</strong> &nbsp;•&nbsp; Monthly: <strong id="month">$0</strong>
+      </div>
+    </div>
+    <a class="back" href="../index.html">← Back to all tools</a>
+  </div>
+
+  <div class="ad-slot">Ad space — replace with your ad network code after approval</div>
+
+  <section class="seo">
+    <h2>How to convert hourly pay to salary</h2>
+    <p>To convert an hourly wage to an annual salary, multiply the hourly rate by hours worked per week, then by 52 weeks. For example, $25/hour × 40 hours × 52 weeks = $52,000 per year. This calculator works in every direction — enter any pay period and it fills in the rest based on your weekly hours.</p>
+    <h2>Gross vs. net</h2>
+    <p>These figures are gross pay (before taxes and deductions). Your take-home pay will be lower depending on your tax situation, benefits, and location.</p>
+  </section>
+</main>
+
+<footer class="site"><div class="container"><div>© <span id="yr"></span> QuickTools</div><div><a href="../index.html">More free tools →</a></div></div></footer>
+
+<script>
+const money = n => '$' + (isFinite(n) ? n : 0).toLocaleString('en-US', {maximumFractionDigits:2});
+function calc() {
+  const amt = parseFloat(document.getElementById('amount').value) || 0;
+  const per = document.getElementById('per').value;
+  const hpw = parseFloat(document.getElementById('hpw').value) || 40;
+  const dpw = parseFloat(document.getElementById('dpw').value) || 5;
+  const weeksPerYear = 52;
+  const hoursPerYear = hpw * weeksPerYear;
+  // First convert the entered amount to an annual figure.
+  let annual;
+  if (per === 'hour') annual = amt * hoursPerYear;
+  else if (per === 'day') annual = amt * dpw * weeksPerYear;
+  else if (per === 'week') annual = amt * weeksPerYear;
+  else if (per === 'month') annual = amt * 12;
+  else annual = amt;
+  const hourly = hoursPerYear ? annual / hoursPerYear : 0;
+  const daily = (dpw * weeksPerYear) ? annual / (dpw * weeksPerYear) : 0;
+  const weekly = annual / weeksPerYear;
+  const monthly = annual / 12;
+  document.getElementById('year').textContent = money(Math.round(annual));
+  document.getElementById('hour').textContent = money(Math.round(hourly * 100) / 100);
+  document.getElementById('day').textContent = money(Math.round(daily * 100) / 100);
+  document.getElementById('week').textContent = money(Math.round(weekly));
+  document.getElementById('month').textContent = money(Math.round(monthly));
+  document.getElementById('out').classList.remove('hidden');
+}
+document.getElementById('go').addEventListener('click', calc);
+['amount','hpw','dpw'].forEach(id => document.getElementById(id).addEventListener('keyup', e => { if (e.key==='Enter') calc(); }));
+document.getElementById('yr').textContent = new Date().getFullYear();
+</script>
+</body>
+</html>

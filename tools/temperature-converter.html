@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Temperature Converter — Celsius, Fahrenheit & Kelvin | QuickTools</title>
+<meta name="description" content="Free temperature converter. Convert between Celsius, Fahrenheit, and Kelvin instantly. Includes a handy quick-reference table for common temperatures.">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header class="site"><div class="container">
+  <a class="brand" href="../index.html">Quick<span>Tools</span></a>
+  <nav class="top"><a href="../index.html">All tools</a></nav>
+</div></header>
+
+<main class="container">
+  <div class="tool">
+    <h1>Temperature Converter</h1>
+    <p class="lede">Convert between Celsius, Fahrenheit, and Kelvin.</p>
+
+    <div class="row">
+      <div><label for="val">Value</label><input type="number" id="val" step="any" value="100" inputmode="decimal"></div>
+      <div><label for="from">From</label><select id="from"><option value="C">Celsius (°C)</option><option value="F">Fahrenheit (°F)</option><option value="K">Kelvin (K)</option></select></div>
+      <div><label for="to">To</label><select id="to"><option value="F">Fahrenheit (°F)</option><option value="C">Celsius (°C)</option><option value="K">Kelvin (K)</option></select></div>
+    </div>
+
+    <div class="result" id="out"><span class="big" id="answer">—</span><span class="muted" id="explain"></span></div>
+    <a class="back" href="../index.html">← Back to all tools</a>
+  </div>
+
+  <div class="ad-slot">Ad space — replace with your ad network code after approval</div>
+
+  <section class="seo">
+    <h2>Temperature conversion formulas</h2>
+    <p>To convert Celsius to Fahrenheit: °F = °C × 9/5 + 32. Fahrenheit to Celsius: °C = (°F − 32) × 5/9. Celsius to Kelvin: K = °C + 273.15. These formulas account for the different zero points and scale sizes of each system.</p>
+    <h2>Quick reference</h2>
+    <table style="width:100%;border-collapse:collapse;color:var(--muted)">
+      <tr><td>Water freezes</td><td>0 °C</td><td>32 °F</td><td>273.15 K</td></tr>
+      <tr><td>Room temperature</td><td>21 °C</td><td>70 °F</td><td>294 K</td></tr>
+      <tr><td>Body temperature</td><td>37 °C</td><td>98.6 °F</td><td>310 K</td></tr>
+      <tr><td>Water boils</td><td>100 °C</td><td>212 °F</td><td>373.15 K</td></tr>
+    </table>
+  </section>
+</main>
+
+<footer class="site"><div class="container"><div>© <span id="yr"></span> QuickTools</div><div><a href="../index.html">More free tools →</a></div></div></footer>
+
+<script>
+const from = document.getElementById('from'), to = document.getElementById('to'), val = document.getElementById('val');
+function toC(v, u) { if (u === 'C') return v; if (u === 'F') return (v - 32) * 5/9; return v - 273.15; }
+function fromC(v, u) { if (u === 'C') return v; if (u === 'F') return v * 9/5 + 32; return v + 273.15; }
+const sym = { C: '°C', F: '°F', K: 'K' };
+function round(n) { return Math.round(n * 100) / 100; }
+function convert() {
+  const v = parseFloat(val.value);
+  const ans = document.getElementById('answer'), exp = document.getElementById('explain');
+  if (isNaN(v)) { ans.textContent = 'Enter a value'; exp.textContent = ''; return; }
+  const result = round(fromC(toC(v, from.value), to.value));
+  ans.textContent = result + ' ' + sym[to.value];
+  exp.textContent = `${v} ${sym[from.value]} = ${result} ${sym[to.value]}`;
+}
+[from, to, val].forEach(el => el.addEventListener('input', convert));
+convert();
+document.getElementById('yr').textContent = new Date().getFullYear();
+</script>
+</body>
+</html>

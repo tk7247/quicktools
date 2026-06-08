@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Average Calculator — Mean, Median, Mode & Range | QuickTools</title>
+<meta name="description" content="Free average calculator. Enter numbers to find the mean, median, mode, range, sum, and count. Great for grades, data, and statistics homework.">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header class="site"><div class="container">
+  <a class="brand" href="../index.html">Quick<span>Tools</span></a>
+  <nav class="top"><a href="../index.html">All tools</a></nav>
+</div></header>
+
+<main class="container">
+  <div class="tool">
+    <h1>Average Calculator</h1>
+    <p class="lede">Mean, median, mode, and range — from any list of numbers.</p>
+
+    <label for="nums">Numbers (separated by commas, spaces, or new lines)</label>
+    <textarea id="nums" rows="4" placeholder="e.g. 12, 7, 9, 15, 7, 10">12, 7, 9, 15, 7, 10</textarea>
+
+    <button class="primary" id="go">Calculate</button>
+
+    <div class="result hidden" id="out">
+      <span class="big" id="mean">—</span><span class="muted">mean (average)</span>
+      <div style="margin-top:12px">
+        Median: <strong id="median">—</strong> &nbsp;•&nbsp; Mode: <strong id="mode">—</strong> &nbsp;•&nbsp; Range: <strong id="range">—</strong><br>
+        Sum: <strong id="sum">—</strong> &nbsp;•&nbsp; Count: <strong id="count">—</strong> &nbsp;•&nbsp; Min/Max: <strong id="minmax">—</strong>
+      </div>
+    </div>
+    <a class="back" href="../index.html">← Back to all tools</a>
+  </div>
+
+  <div class="ad-slot">Ad space — replace with your ad network code after approval</div>
+
+  <section class="seo">
+    <h2>Mean, median, and mode explained</h2>
+    <p>The <strong>mean</strong> is the sum of all values divided by how many there are. The <strong>median</strong> is the middle value when the numbers are sorted. The <strong>mode</strong> is the value that appears most often. The <strong>range</strong> is the difference between the largest and smallest values. Together they summarize a data set.</p>
+    <h2>Quick and accurate</h2>
+    <p>Paste grades, measurements, or any numbers and get every common statistic at once. Separators can be commas, spaces, or line breaks.</p>
+  </section>
+</main>
+
+<footer class="site"><div class="container"><div>© <span id="yr"></span> QuickTools</div><div><a href="../index.html">More free tools →</a></div></div></footer>
+
+<script>
+function round(n) { return Math.round(n * 1e6) / 1e6; }
+function calc() {
+  const raw = document.getElementById('nums').value;
+  const nums = (raw.match(/-?\d+(\.\d+)?/g) || []).map(Number);
+  const out = document.getElementById('out');
+  if (!nums.length) { document.getElementById('mean').textContent = 'Enter some numbers'; out.classList.remove('hidden'); return; }
+  const n = nums.length;
+  const sum = nums.reduce((a,b) => a+b, 0);
+  const mean = sum / n;
+  const sorted = [...nums].sort((a,b) => a-b);
+  const median = n % 2 ? sorted[(n-1)/2] : (sorted[n/2-1] + sorted[n/2]) / 2;
+  const freq = {}; let best = [], bestCount = 0;
+  nums.forEach(x => { freq[x] = (freq[x]||0)+1; });
+  Object.keys(freq).forEach(k => { if (freq[k] > bestCount) { bestCount = freq[k]; best = [k]; } else if (freq[k] === bestCount) best.push(k); });
+  const mode = bestCount <= 1 ? 'none' : best.join(', ');
+  document.getElementById('mean').textContent = round(mean);
+  document.getElementById('median').textContent = round(median);
+  document.getElementById('mode').textContent = mode;
+  document.getElementById('range').textContent = round(sorted[n-1] - sorted[0]);
+  document.getElementById('sum').textContent = round(sum);
+  document.getElementById('count').textContent = n;
+  document.getElementById('minmax').textContent = round(sorted[0]) + ' / ' + round(sorted[n-1]);
+  out.classList.remove('hidden');
+}
+document.getElementById('go').addEventListener('click', calc);
+document.getElementById('yr').textContent = new Date().getFullYear();
+</script>
+</body>
+</html>

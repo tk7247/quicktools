@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Random Number Generator — Pick Numbers in a Range | QuickTools</title>
+<meta name="description" content="Free random number generator. Pick one or many random numbers between any minimum and maximum, with or without duplicates. Uses secure browser randomness.">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header class="site"><div class="container">
+  <a class="brand" href="../index.html">Quick<span>Tools</span></a>
+  <nav class="top"><a href="../index.html">All tools</a></nav>
+</div></header>
+
+<main class="container">
+  <div class="tool">
+    <h1>Random Number Generator</h1>
+    <p class="lede">Pick random numbers in any range — fairly and securely.</p>
+
+    <div class="row">
+      <div><label for="min">Minimum</label><input type="number" id="min" value="1" step="1" inputmode="numeric"></div>
+      <div><label for="max">Maximum</label><input type="number" id="max" value="100" step="1" inputmode="numeric"></div>
+      <div><label for="count">How many</label><input type="number" id="count" value="1" min="1" step="1" inputmode="numeric"></div>
+    </div>
+    <label><input type="checkbox" id="unique"> No duplicates (unique numbers)</label>
+
+    <button class="primary" id="go">Generate</button>
+
+    <div class="result hidden" id="out"><span class="big" id="nums" style="word-break:break-word">—</span></div>
+    <a class="back" href="../index.html">← Back to all tools</a>
+  </div>
+
+  <div class="ad-slot">Ad space — replace with your ad network code after approval</div>
+
+  <section class="seo">
+    <h2>Fair, unpredictable numbers</h2>
+    <p>This generator uses your browser's cryptographically secure random source, so every number in the range is equally likely. Choose how many numbers to draw, and enable "no duplicates" for things like raffles or picking unique winners.</p>
+    <h2>Common uses</h2>
+    <p>Draw lottery-style numbers, pick a random winner, choose teams, roll custom dice, or sample data. Set the minimum and maximum to any whole numbers.</p>
+  </section>
+</main>
+
+<footer class="site"><div class="container"><div>© <span id="yr"></span> QuickTools</div><div><a href="../index.html">More free tools →</a></div></div></footer>
+
+<script>
+function randInt(min, max) {
+  const range = max - min + 1;
+  const a = new Uint32Array(1);
+  crypto.getRandomValues(a);
+  return min + (a[0] % range);
+}
+function generate() {
+  let min = Math.floor(parseFloat(document.getElementById('min').value));
+  let max = Math.floor(parseFloat(document.getElementById('max').value));
+  let count = Math.max(1, parseInt(document.getElementById('count').value) || 1);
+  const unique = document.getElementById('unique').checked;
+  const out = document.getElementById('nums');
+  if (isNaN(min) || isNaN(max)) { out.textContent = 'Enter min and max'; document.getElementById('out').classList.remove('hidden'); return; }
+  if (min > max) { const t = min; min = max; max = t; }
+  const span = max - min + 1;
+  if (unique && count > span) { out.textContent = `Can't pick ${count} unique numbers from a range of ${span}`; document.getElementById('out').classList.remove('hidden'); return; }
+  const results = [];
+  if (unique) {
+    const pool = new Set();
+    while (pool.size < count) pool.add(randInt(min, max));
+    results.push(...pool);
+  } else {
+    for (let i = 0; i < count; i++) results.push(randInt(min, max));
+  }
+  out.textContent = results.join(', ');
+  document.getElementById('out').classList.remove('hidden');
+}
+document.getElementById('go').addEventListener('click', generate);
+['min','max','count'].forEach(id => document.getElementById(id).addEventListener('keyup', e => { if (e.key==='Enter') generate(); }));
+document.getElementById('yr').textContent = new Date().getFullYear();
+generate();
+</script>
+</body>
+</html>
