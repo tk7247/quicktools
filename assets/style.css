@@ -83,6 +83,14 @@ button.primary:hover { filter: brightness(1.08); }
 .seo { margin: 32px 0; color: var(--muted); }
 .seo h2 { color: var(--text); font-size: 20px; margin-top: 28px; }
 
+/* Affiliate recommendation box */
+.reco { margin: 24px 0; padding: 18px 20px; background: var(--bg-card); border: 1px solid var(--border); border-left: 4px solid var(--brand); border-radius: var(--radius); }
+.reco h3 { margin: 0 0 6px; font-size: 16px; color: var(--text); }
+.reco p { margin: 0 0 12px; color: var(--muted); font-size: 14px; }
+.reco a.btn { display: inline-block; background: linear-gradient(135deg, var(--brand), #8a6cff); color: #fff; padding: 9px 16px; border-radius: 8px; font-weight: 700; font-size: 14px; }
+.reco a.btn:hover { filter: brightness(1.08); text-decoration: none; }
+.disclosure { font-size: 12px; color: var(--muted); margin-top: 10px; font-style: italic; }
+
 /* Ad slot */
 .ad-slot {
   margin: 28px 0; padding: 24px; text-align: center; border: 1px dashed var(--border);
